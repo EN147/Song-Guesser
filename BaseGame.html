@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Heardle Mini (YouTube)</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 760px; margin: 40px auto; padding: 0 16px; }
+    h1 { margin: 0 0 12px; }
+    .card { border: 1px solid #ddd; border-radius: 12px; padding: 16px; margin: 16px 0; }
+    .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    input[type="text"] { flex: 1 1 320px; padding: 10px 12px; border: 1px solid #bbb; border-radius: 8px; }
+    button { padding: 10px 14px; border: 1px solid #333; background: #111; color: #fff; border-radius: 10px; cursor: pointer; }
+    button.secondary { background: #fff; color: #111; border-color: #aaa; }
+    .pill { display: inline-block; padding: 6px 10px; border-radius: 999px; border: 1px solid #ddd; }
+    .muted { color: #666; }
+    .correct { color: #0a7a3c; font-weight: 600; }
+    .wrong { color: #a22; font-weight: 600; }
+    .grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; margin-top: 8px; }
+    .box { height: 12px; border-radius: 4px; background: #eee; }
+    .box.filled { background: #111; }
+    #yt { position:absolute; width:0; height:0; overflow:hidden; }
+  </style>
+</head>
+<body>
+  <h1>Heardle Mini</h1>
+  <div class="muted">YouTube-based, no build tools. Replace the sample tracks below and go.</div>
+
+  <div class="card">
+    <div class="row">
+      <button id="play">▶ Play</button>
+      <button id="replay" class="secondary">↺ Replay</button>
+      <button id="skip" class="secondary">Skip</button>
+      <span class="pill"><span id="len">0</span>s preview</span>
+      <span class="muted">Attempt <span id="attempt">1</span>/6</span>
+    </div>
+    <div class="grid" id="bars"></div>
+  </div>
+
+  <div class="card">
+    <div class="row">
+      <input id="guess" type="text" placeholder="Type your guess…" />
+      <button id="submit">Submit</button>
+    </div>
+    <div id="status" class="muted" style="margin-top:8px;"></div>
+  </div>
+
+  <div id="yt"></div>
+  <script src="https://www.youtube.com/iframe_api"></script>
+<script>
+  // ======= 1) Your tracks (replace with your own) =======
+  const tracks = [
+          { title: "Hanashirube",  id: "1CyRX3x6aDY", start: 0 },
+      { title: "Tasugare",  id: "zrApXHA2ECs", start: 1 },
+      { title: "Phronesis",id: "vnc6PTtsisw", start: 0 }
+  ];
+
+  // ======= 2) Game config =======
+  const previewSteps = [1, 2, 4, 7, 11, 16]; // seconds
+  const barsEl = document.getElementById('bars');
+  for (let i = 0; i < previewSteps.length; i++) {
+    const b = document.createElement('div'); b.className = 'box'; barsEl.appendChild(b);
+  }
+
+  // ======= 3) State =======
+  let player, ready = false;     // keep these
+  let currentIndex = Math.floor(Math.random() * tracks.length);
+  let attemptIdx = 0; // 0..5
+  let segTimer = null;           // keep this
+  let pendingStopMs = null;      // moved up here so it's declared once
+
+  const playBtn = document.getElementById('play');
+  const replayBtn = document.getElementById('replay');
+  const skipBtn = document.getElementById('skip');
+  const guessInput = document.getElementById('guess');
+  const submitBtn = document.getElementById('submit');
+  const statusEl = document.getElementById('status');
+  const lenEl = document.getElementById('len');
+  const attemptEl = document.getElementById('attempt');
+
+  // ======= 4) YouTube IFrame API plumbing =======
+  window.onYouTubeIframeAPIReady = function () {
+    player = new YT.Player('yt', {
+      height: '0',
+      width: '0',
+      playerVars: { controls: 0, disablekb: 1, rel: 0, playsinline: 1 },
+      events: {
+        onReady: () => {
+          ready = true;
+          console.log('[YT] ready');
+        },
+        onStateChange: (e) => {
+          // 1 = PLAYING, 2 = PAUSED, 3 = BUFFERING, 5 = CUED
+          if (e.data === YT.PlayerState.PLAYING && pendingStopMs != null) {
+            clearTimeout(segTimer);
+            segTimer = setTimeout(() => {
+              player.pauseVideo();
+              pendingStopMs = null;
+            }, pendingStopMs);
+          }
+        }
+      }
+    });
+  };
+
+  function playSegment(seconds) {
+    if (!ready) { console.warn('[YT] not ready yet'); return; }
+
+    const t = tracks[currentIndex];
+    pendingStopMs = seconds * 1000;
+
+    // Make sure we’re audible.
+    try { player.unMute(); } catch {}
+    try { player.setVolume(100); } catch {}
+
+    // Load + play from the desired start.
+    player.loadVideoById({ videoId: t.id, startSeconds: t.start });
+
+    // Some browsers need a nudge after load.
+    setTimeout(() => {
+      if (player.getPlayerState && player.getPlayerState() !== YT.PlayerState.PLAYING) {
+        player.playVideo();
+      }
+    }, 200);
+  }
+
+  function pauseSegment() {
+    pendingStopMs = null;
+    clearTimeout(segTimer);
+    player && player.pauseVideo();
+  }
+
+  function updateUI() {
+    lenEl.textContent = previewSteps[attemptIdx];
+    attemptEl.textContent = attemptIdx + 1;
+    [...barsEl.children].forEach((b, i) => {
+      b.classList.toggle('filled', i <= attemptIdx);
+    });
+  }
+
+  function nextTrack() {
+    player && player.pauseVideo();
+    attemptIdx = 0;
+    currentIndex = (currentIndex + 1) % tracks.length;
+    statusEl.textContent = '';
+    updateUI();
+  }
+
+  function handleSkip() {
+    if (attemptIdx < previewSteps.length - 1) {
+      attemptIdx++;
+      updateUI();
+      playSegment(previewSteps[attemptIdx]);
+    } else {
+      statusEl.innerHTML = `<span class="wrong">Out of tries.</span> It was: <b>${tracks[currentIndex].title}</b>.`;
+      nextTrack();
+    }
+  }
+
+  // ======= 5) Wire up buttons =======
+  playBtn.addEventListener('click', () => {
+    updateUI();
+    playSegment(previewSteps[attemptIdx]);
+  });
+
+  replayBtn.addEventListener('click', () => {
+    playSegment(previewSteps[attemptIdx]);
+  });
+
+  skipBtn.addEventListener('click', handleSkip);
+
+  submitBtn.addEventListener('click', () => {
+    const g = (guessInput.value || '').trim().toLowerCase();
+    if (!g) return guessInput.focus();
+    const title = tracks[currentIndex].title.toLowerCase();
+    if (title.includes(g)) {
+      statusEl.innerHTML = `<span class="correct">Correct!</span> ${tracks[currentIndex].title}`;
+      nextTrack();
+      guessInput.value = '';
+    } else {
+      statusEl.innerHTML = `<span class="wrong">Nope.</span>`;
+      handleSkip();
+    }
+  });
+
+  guessInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') submitBtn.click();
+  });
+
+  // Initial paint
+  updateUI();
+</script>
+</body>
+</html>
