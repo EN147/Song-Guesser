@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Heardle Mini (YouTube)</title>
+  <title>Song Guesser (YouTube)</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <style>
     body { font-family: system-ui, sans-serif; max-width: 760px; margin: 40px auto; padding: 0 16px; }
     h1 { margin: 0 0 12px; }
     .card { border: 1px solid #ddd; border-radius: 12px; padding: 16px; margin: 16px 0; }
-    .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
     input[type="text"] { flex: 1 1 320px; padding: 10px 12px; border: 1px solid #bbb; border-radius: 8px; }
     button { padding: 10px 14px; border: 1px solid #333; background: #111; color: #fff; border-radius: 10px; cursor: pointer; }
     button.secondary { background: #fff; color: #111; border-color: #aaa; }
@@ -19,34 +19,40 @@
     .grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; margin-top: 8px; }
     .box { height: 12px; border-radius: 4px; background: #eee; }
     .box.filled { background: #111; }
+    .volume-control { position: absolute; left: 500px; top: 145.5px; display: flex; align-items: center; gap: 8px;}
+    #volumeAdj { writing-mode: vertical-lr; -webkit-appearance: slider-vertical; width: 8px; height: 175px; transform: rotate(180deg); }
     #yt { position:absolute; width:0; height:0; overflow:hidden; }
   </style>
 </head>
 <body>
-  <h1>Heardle Mini</h1>
-  <div class="muted">YouTube-based, no build tools. Replace the sample tracks below and go.</div>
+    <h1>Song Guesser</h1>
+    <div class="muted">YouTube-based, song guesser game.</div>
 
-  <div class="card">
-    <div class="row">
-      <button id="play">▶ Play</button>
-      <button id="replay" class="secondary">↺ Replay</button>
-      <button id="skip" class="secondary">Skip</button>
-      <span class="pill"><span id="len">0</span>s preview</span>
-      <span class="muted">Attempt <span id="attempt">1</span>/6</span>
+    <div class="card">
+        <div class="row">
+            <button id="play">▶ Play</button>
+            <button id="skip" class="secondary">Skip</button>
+            <span class="pill"><span id="len">0</span>s preview</span>
+            <span class="muted">Attempt <span id="attempt">1</span>/6</span>
+        </div>
+        <div class="grid" id="bars"></div>
     </div>
-    <div class="grid" id="bars"></div>
-  </div>
 
-  <div class="card">
-    <div class="row">
-      <input id="guess" type="text" placeholder="Type your guess…" />
-      <button id="submit">Submit</button>
+    <div class="card">
+        <div class="row">
+            <input id="guess" type="text" placeholder="Type your guess…" />
+            <button id="submit">Submit</button>
+        </div>
+        <div id="status" class="muted" style="margin-top:8px;"></div>
     </div>
-    <div id="status" class="muted" style="margin-top:8px;"></div>
-  </div>
 
-  <div id="yt"></div>
-  <script src="https://www.youtube.com/iframe_api"></script>
-  <script src="Main.js"></script>
+    <div class="volume-control">
+        <label for="volumeAdj">Volume</label>
+        <input type="range" min="1" max="100" value="50" class="slider" id="volumeAdj">
+    </div>
+
+    <div id="yt"></div>
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script src="Main.js"></script>
 </body>
 </html>

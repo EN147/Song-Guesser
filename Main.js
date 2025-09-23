@@ -8,6 +8,8 @@ const tracks = [
 // ======= 2) Game config =======
 const previewSteps = [1, 2, 4, 7, 11, 16]; // seconds
 const barsEl = document.getElementById('bars');
+let volumeCache = 50;
+
 for (let i = 0; i < previewSteps.length; i++) {
     const b = document.createElement('div'); b.className = 'box'; barsEl.appendChild(b);
 }
@@ -20,13 +22,13 @@ let segTimer = null;           // keep this
 let pendingStopMs = null;      // moved up here so it's declared once
 
 const playBtn = document.getElementById('play');
-const replayBtn = document.getElementById('replay');
 const skipBtn = document.getElementById('skip');
 const guessInput = document.getElementById('guess');
 const submitBtn = document.getElementById('submit');
 const statusEl = document.getElementById('status');
 const lenEl = document.getElementById('len');
 const attemptEl = document.getElementById('attempt');
+const setVolume = document.getElementById('volumeAdj')
 
 // ======= 4) YouTube IFrame API plumbing =======
 window.onYouTubeIframeAPIReady = function () {
@@ -37,11 +39,13 @@ window.onYouTubeIframeAPIReady = function () {
         events: {
             onReady: () => {
                 ready = true;
+                player.setVolume(volumeCache);
                 console.log('[YT] ready');
             },
             onStateChange: (e) => {
                 // 1 = PLAYING, 2 = PAUSED, 3 = BUFFERING, 5 = CUED
                 if (e.data === YT.PlayerState.PLAYING && pendingStopMs != null) {
+                    player.setVolume(volumeCache);
                     clearTimeout(segTimer);
                     segTimer = setTimeout(() => {
                         player.pauseVideo();
@@ -61,7 +65,7 @@ function playSegment(seconds) {
 
     // Make sure we’re audible.
     try { player.unMute(); } catch { }
-    try { player.setVolume(100); } catch { }
+    try { player.setVolume(volumeCache); } catch { }
 
     // Load + play from the desired start.
     player.loadVideoById({ videoId: t.id, startSeconds: t.start });
@@ -113,10 +117,6 @@ playBtn.addEventListener('click', () => {
     playSegment(previewSteps[attemptIdx]);
 });
 
-replayBtn.addEventListener('click', () => {
-    playSegment(previewSteps[attemptIdx]);
-});
-
 skipBtn.addEventListener('click', handleSkip);
 
 submitBtn.addEventListener('click', () => {
@@ -136,6 +136,14 @@ submitBtn.addEventListener('click', () => {
 guessInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') submitBtn.click();
 });
+
+setVolume.addEventListener('input', (e) => {
+    const vol = parseInt(e.target.value, 10);
+    volumeCache = vol;
+    if (player && player.unMute) player.unMute();
+    if (player && player.setVolume) player.setVolume(vol);
+});
+
 
 // Initial paint
 updateUI();
