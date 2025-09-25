@@ -1,10 +1,18 @@
 // ======= 1) Your tracks (replace with your own) =======
 const tracks = [
-    { title: "Hanashirube", id: "1CyRX3x6aDY", start: 0 },
-    { title: "Tasugare", id: "zrApXHA2ECs", start: 1 },
-    { title: "Phronesis", id: "vnc6PTtsisw", start: 0 },
-    { title: "Test1", id: "vnc6PTtsisw", start: 0 },
-    { title: "Test2", id: "vnc6PTtsisw", start: 0 }
+    { creator: "Atelier Ayesha", title: "Hanashirube", id: "1CyRX3x6aDY", start: 0 },
+    { creator: "Atelier Ayesha", title: "Tasugare", id: "zrApXHA2ECs", start: 1 },
+    { creator: "Atelier Sophie", title: "Phronesis", id: "vnc6PTtsisw", start: 0 },
+    { creator: "Atelier Sophie", title: "Test1", id: "vnc6PTtsisw", start: 0 },
+    { creator: "Atelier Sophie", title: "Test2", id: "vnc6PTtsisw", start: 0 },
+    { creator: "Atelier Sophie", title: "Test3", id: "vnc6PTtsisw", start: 0 },
+    { creator: "Atelier Sophie", title: "Test4", id: "vnc6PTtsisw", start: 0 },
+    { creator: "Atelier Sophie", title: "Test5", id: "vnc6PTtsisw", start: 0 },
+    { creator: "Atelier Sophie", title: "Test6", id: "vnc6PTtsisw", start: 0 },
+    { creator: "Atelier Sophie", title: "Test7", id: "vnc6PTtsisw", start: 0 },
+    { creator: "Atelier Sophie", title: "Test8", id: "vnc6PTtsisw", start: 0 },
+    { creator: "Atelier Sophie", title: "Test9", id: "vnc6PTtsisw", start: 0 },
+    { creator: "Atelier Sophie", title: "Test10", id: "vnc6PTtsisw", start: 0 }
 ];
 
 // ======= 2) Game config =======
@@ -13,7 +21,8 @@ const barsEl = document.getElementById('bars');
 let volumeCache = 50;
 
 for (let i = 0; i < previewSteps.length; i++) {
-    const b = document.createElement('div'); b.className = 'box'; barsEl.appendChild(b);
+    const b = document.createElement('div');
+    b.className = 'box'; barsEl.appendChild(b);
 }
 
 // ======= 3) State =======
@@ -46,6 +55,8 @@ function normalize(s) {
 
 const titles = tracks.map(t => t.title);
 const titlesNorm = titles.map(t => normalize(t));
+const creators = tracks.map(t => t.creator);
+const creatorsNorm = creators.map(t => normalize(t));
 
 
 // ======= 4) YouTube IFrame API plumbing =======
@@ -122,7 +133,6 @@ function handleSkip() {
     if (attemptIdx < previewSteps.length - 1) {
         attemptIdx++;
         updateUI();
-        playSegment(previewSteps[attemptIdx]);
     } else {
         statusEl.innerHTML = `<span class="wrong">Out of tries.</span> It was: <b>${tracks[currentIndex].title}</b>.`;
         nextTrack();
@@ -159,10 +169,16 @@ guessInput.addEventListener('blur', () => setTimeout(hideList, 100));
 
 guessInput.addEventListener('input', () => {
     const q = normalize(guessInput.value);
+    if (q.length < 2) return renderList([]);
     const matches = [];
     for (let i = 0; i < titlesNorm.length; i++) {
-        if (q && titlesNorm[i].includes(q)) matches.push({ label: titles[i], idx: i });
-        if (matches.length === 8) break;
+        const fullTitleNorm = creatorsNorm[i] + " " + titlesNorm[i];
+        const fullTile = creators[i] + " " + titles[i];
+        if (q && fullTitleNorm.includes(q)) {
+            matches.push({ label: fullTile, idx: i });
+            continue;
+        }
+        if (q && titlesNorm[i].includes(q)) matches.push({ label: fullTile, idx: i });
     }
     console.log('matches', matches.length);
 
