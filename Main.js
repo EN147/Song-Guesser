@@ -2,7 +2,9 @@
 const tracks = [
     { title: "Hanashirube", id: "1CyRX3x6aDY", start: 0 },
     { title: "Tasugare", id: "zrApXHA2ECs", start: 1 },
-    { title: "Phronesis", id: "vnc6PTtsisw", start: 0 }
+    { title: "Phronesis", id: "vnc6PTtsisw", start: 0 },
+    { title: "Test1", id: "vnc6PTtsisw", start: 0 },
+    { title: "Test2", id: "vnc6PTtsisw", start: 0 }
 ];
 
 // ======= 2) Game config =======
@@ -20,6 +22,10 @@ let currentIndex = Math.floor(Math.random() * tracks.length);
 let attemptIdx = 0; // 0..5
 let segTimer = null;           // keep this
 let pendingStopMs = null;      // moved up here so it's declared once
+let acOpen = false;
+let acIndex = -1;     // highlighted item index, -1 = none
+let acItems = [];     // last rendered matches [{label, idx}]
+
 
 const playBtn = document.getElementById('play');
 const skipBtn = document.getElementById('skip');
@@ -29,6 +35,18 @@ const statusEl = document.getElementById('status');
 const lenEl = document.getElementById('len');
 const attemptEl = document.getElementById('attempt');
 const setVolume = document.getElementById('volumeAdj')
+
+function normalize(s) {
+    return (s || '')
+        .toLowerCase()
+        .trim()
+        .replace(/\s+/g, ' ')
+        .replace(/[^\w\s]/g, ''); // optional: strip punctuation
+}
+
+const titles = tracks.map(t => t.title);
+const titlesNorm = titles.map(t => normalize(t));
+
 
 // ======= 4) YouTube IFrame API plumbing =======
 window.onYouTubeIframeAPIReady = function () {
@@ -136,6 +154,130 @@ submitBtn.addEventListener('click', () => {
 guessInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') submitBtn.click();
 });
+
+guessInput.addEventListener('blur', () => setTimeout(hideList, 100));
+
+guessInput.addEventListener('input', () => {
+    const q = normalize(guessInput.value);
+    const matches = [];
+    for (let i = 0; i < titlesNorm.length; i++) {
+        if (q && titlesNorm[i].includes(q)) matches.push({ label: titles[i], idx: i });
+        if (matches.length === 8) break;
+    }
+    console.log('matches', matches.length);
+
+    renderList(matches);  // see D
+});
+
+guessInput.addEventListener('keydown', (e) => {
+    if (!acOpen) return;  // only handle keys when dropdown is open
+
+    if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        setActive(acIndex < 0 ? 0 : acIndex + 1);
+        return;
+    }
+    if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        setActive(acIndex <= 0 ? 0 : acIndex - 1);
+        return;
+    }
+    if (e.key === 'Enter') {
+        // if list open, pick highlighted; else let your existing submit run
+        if (acIndex >= 0) {
+            e.preventDefault();
+            selectIndex(acIndex);
+        }
+        return;
+    }
+    if (e.key === 'Escape') {
+        e.preventDefault();
+        hideList();
+        return;
+    }
+});
+
+guessInput.setAttribute('role', 'combobox');
+guessInput.setAttribute('aria-autocomplete', 'list');
+guessInput.setAttribute('aria-controls', 'ac-list');
+guessInput.setAttribute('aria-activedescendant', `opt-${acIndex}`);
+
+function renderList(items) {
+    const list = document.getElementById('ac-list');
+    acItems = items;
+    acIndex = items.length ? 0 : -1;        // start highlighted at first item (optional)
+
+    if (!items.length) {
+        list.hidden = true;
+        list.innerHTML = '';
+        acOpen = false;
+        return;
+    }
+
+    list.innerHTML = items
+        .map((it, i) => `<li role="option" data-i="${i}" class="${i === acIndex ? 'active' : ''}">${it.label}</li>`)
+        .join('');
+    list.hidden = false;
+    acOpen = true;
+}
+
+const acList = document.getElementById('ac-list');
+
+acList.addEventListener('mousemove', (e) => {
+    const li = e.target.closest('li[role="option"]');
+    if (!li) return;
+    const i = parseInt(li.dataset.i, 10);
+    if (!Number.isNaN(i) && i !== acIndex) setActive(i);
+});
+
+acList.addEventListener('mousedown', (e) => {
+    // prevent input from losing focus before we handle selection
+    e.preventDefault();
+    const li = e.target.closest('li[role="option"]');
+    if (!li) return;
+    selectIndex(parseInt(li.dataset.i, 10));
+});
+
+function setActive(i) {
+    const list = document.getElementById('ac-list');
+    if (!acItems.length) return;
+    acIndex = Math.max(0, Math.min(i, acItems.length - 1));
+    [...list.children].forEach((li, idx) => {
+        li.classList.toggle('active', idx === acIndex);
+    });
+}
+
+function selectIndex(i) {
+    if (!acItems.length) return;
+    setActive(i);
+    guessInput.value = acItems[acIndex].label;  // commit to input
+    hideList();
+}
+
+function hideList() {
+    const list = document.getElementById('ac-list');
+    list.hidden = true;
+    list.innerHTML = '';
+    acOpen = false;
+    acIndex = -1;
+    acItems = [];
+}
+
+function setActive(i) {
+    const list = document.getElementById('ac-list');
+    if (!acItems.length) return;
+    acIndex = Math.max(0, Math.min(i, acItems.length - 1));
+    [...list.children].forEach((li, idx) => {
+        li.classList.toggle('active', idx === acIndex);
+        if (idx === acIndex) {
+            const r = li.getBoundingClientRect();
+            const L = list.getBoundingClientRect();
+            if (r.top < L.top) li.scrollIntoView({ block: 'nearest' });
+            if (r.bottom > L.bottom) li.scrollIntoView({ block: 'nearest' });
+        }
+    });
+}
+
 
 setVolume.addEventListener('input', (e) => {
     const vol = parseInt(e.target.value, 10);
