@@ -1,4 +1,4 @@
-// ======= 1) Your tracks (replace with your own) =======
+// ======= 1) Your tracks (replace with your own) ======= This will be changed to a db at some point
 const tracks = [
     { creator: "Atelier Ayesha", title: "Hanashirube", id: "1CyRX3x6aDY", start: 0 },
     { creator: "Atelier Ayesha", title: "Tasugare", id: "zrApXHA2ECs", start: 1 },
@@ -44,6 +44,8 @@ const statusEl = document.getElementById('status');
 const lenEl = document.getElementById('len');
 const attemptEl = document.getElementById('attempt');
 const setVolume = document.getElementById('volumeAdj')
+const nextBtn = document.getElementById('next')
+const results = document.querySelector('.results')
 
 function normalize(s) {
     return (s || '')
@@ -62,9 +64,9 @@ const creatorsNorm = creators.map(t => normalize(t));
 // ======= 4) YouTube IFrame API plumbing =======
 window.onYouTubeIframeAPIReady = function () {
     player = new YT.Player('yt', {
-        height: '0',
-        width: '0',
-        playerVars: { controls: 0, disablekb: 1, rel: 0, playsinline: 1 },
+        height: '390',
+        width: '640',
+        playerVars: { controls: 1, disablekb: 1, rel: 0, playsinline: 1 },
         events: {
             onReady: () => {
                 ready = true;
@@ -122,6 +124,7 @@ function updateUI() {
 }
 
 function nextTrack() {
+    results.style.display = 'none';
     player && player.pauseVideo();
     attemptIdx = 0;
     currentIndex = (currentIndex + 1) % tracks.length;
@@ -135,8 +138,18 @@ function handleSkip() {
         updateUI();
     } else {
         statusEl.innerHTML = `<span class="wrong">Out of tries.</span> It was: <b>${tracks[currentIndex].title}</b>.`;
-        nextTrack();
+        loadResults();
+        //nextTrack();
     }
+}
+
+function loadResults() {
+    const data = player.getVideoData();
+    const t = tracks[currentIndex]; //Change to a function to be called other places
+    results.style.display = 'block';
+    if (!data) player.loadVideoById({ videoId: t.id, startSeconds: t.start });
+    else player.seekTo(t.start, true);
+    player.playVideo();
 }
 
 // ======= 5) Wire up buttons =======
@@ -147,13 +160,18 @@ playBtn.addEventListener('click', () => {
 
 skipBtn.addEventListener('click', handleSkip);
 
+nextBtn.addEventListener('click', () => {
+    nextTrack();
+});
+
 submitBtn.addEventListener('click', () => {
-    const g = (guessInput.value || '').trim().toLowerCase();
+    const g = normalize(guessInput.value);
     if (!g) return guessInput.focus();
     const title = tracks[currentIndex].title.toLowerCase();
     if (title.includes(g)) {
         statusEl.innerHTML = `<span class="correct">Correct!</span> ${tracks[currentIndex].title}`;
-        nextTrack();
+        loadResults();
+        //nextTrack();
         guessInput.value = '';
     } else {
         statusEl.innerHTML = `<span class="wrong">Nope.</span>`;
@@ -164,6 +182,7 @@ submitBtn.addEventListener('click', () => {
 guessInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') submitBtn.click();
 });
+
 
 guessInput.addEventListener('blur', () => setTimeout(hideList, 100));
 

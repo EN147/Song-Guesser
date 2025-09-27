@@ -21,8 +21,8 @@
     .box.filled { background: #111; }
     .volume-control { position: absolute; left: 500px; top: 145.5px; display: flex; align-items: center; gap: 8px;}
     .input-wrap { position: relative; flex: 1 1 320px;}
+    .results {display:none}
     #volumeAdj { writing-mode: vertical-lr; -webkit-appearance: slider-vertical; width: 8px; height: 175px; transform: rotate(180deg); }
-    #yt { position:absolute; width:0; height:0; overflow:hidden; }
     #ac-list {position: absolute; top: 100%; left: 0; width: 100%; z-index: 10; list-style: none; margin: 4px 0 0; padding: 0; background: #fff; border: 1px solid #ddd; border-radius: 8px; max-height: 200px; overflow: auto; box-shadow: 0 6px 20px rgba(0,0,0,.08);}
     #ac-list li {padding: 8px 10px; cursor: pointer;}
     #ac-list li:hover { background: #f5f5f5;}
@@ -60,7 +60,13 @@
         <input type="range" min="1" max="100" value="50" class="slider" id="volumeAdj">
     </div>
 
-    <div id="yt"></div>
+    <div class="results">
+        <h1>Results</h1>
+        <h2 id="resultsValue">Test</h2>
+        <div id="yt"></div>
+        <button id="next">Next</button>
+    </div>
+
     <script src="https://www.youtube.com/iframe_api"></script>
     <script src="Main.js"></script>
 </body>
