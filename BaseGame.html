@@ -19,10 +19,22 @@
     .grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; margin-top: 8px; }
     .box { height: 12px; border-radius: 4px; background: #eee; }
     .box.filled { background: #111; }
-    .volume-control { position: absolute; left: 500px; top: 145.5px; display: flex; align-items: center; gap: 8px;}
+      .volume-control {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 8px;
+          margin-top: -15px; /* pushes only this flex item down */
+      }
     .input-wrap { position: relative; flex: 1 1 320px;}
     .results {display:none}
-    #volumeAdj { writing-mode: vertical-lr; -webkit-appearance: slider-vertical; width: 8px; height: 175px; transform: rotate(180deg); }
+    .content { flex: 1; }
+      .main {
+          display: flex;
+          align-items: flex-start;
+          gap: 24px;
+      }
+    #volumeAdj { writing-mode: vertical-lr; -webkit-appearance: slider-vertical; width: 8px; height: clamp(120px, 24vh, 200px); transform: rotate(180deg); }
     #ac-list {position: absolute; top: 100%; left: 0; width: 100%; z-index: 10; list-style: none; margin: 4px 0 0; padding: 0; background: #fff; border: 1px solid #ddd; border-radius: 8px; max-height: 200px; overflow: auto; box-shadow: 0 6px 20px rgba(0,0,0,.08);}
     #ac-list li {padding: 8px 10px; cursor: pointer;}
     #ac-list li:hover { background: #f5f5f5;}
@@ -34,31 +46,34 @@
     <h1>Song Guesser</h1>
     <div class="muted">YouTube-based, song guesser game.</div>
 
-    <div class="card">
-        <div class="row">
-            <button id="play">▶ Play</button>
-            <button id="skip" class="secondary">Skip</button>
-            <span class="pill"><span id="len">0</span>s preview</span>
-            <span class="muted">Attempt <span id="attempt">1</span>/6</span>
-        </div>
-        <div class="grid" id="bars"></div>
-    </div>
-
-    <div class="card">
-        <div class="row">
-            <div class="input-wrap">
-                <input id="guess" type="text" placeholder="Type your guess…">
-                <ul id="ac-list" class="ac-list" role="listbox" hidden></ul>
+    <div class="main">
+        <div class="content">
+            <div class="card">
+                <div class="row">
+                    <button id="play">▶ Play</button>
+                    <button id="skip" class="secondary">Skip</button>
+                    <span class="pill"><span id="len">0</span>s preview</span>
+                    <span class="muted">Attempt <span id="attempt">1</span>/6</span>
+                </div>
+                <div class="grid" id="bars"></div>
             </div>
-            <button id="submit">Submit</button>
+            <div class="card">
+                <div class="row">
+                    <div class="input-wrap">
+                        <input id="guess" type="text" placeholder="Type your guess…">
+                        <ul id="ac-list" class="ac-list" role="listbox" hidden></ul>
+                    </div>
+                    <button id="submit">Submit</button>
+                </div>
+                <div id="status" class="muted" style="margin-top:8px;"></div>
+            </div>
         </div>
-        <div id="status" class="muted" style="margin-top:8px;"></div>
+        <div class="volume-control">
+            <label for="volumeAdj">Volume</label>
+            <input type="range" id="volumeAdj" min="0" max="100" value="50" />
+        </div>
     </div>
 
-    <div class="volume-control">
-        <label for="volumeAdj">Volume</label>
-        <input type="range" min="1" max="100" value="50" class="slider" id="volumeAdj">
-    </div>
 
     <div class="results">
         <h1>Results</h1>
