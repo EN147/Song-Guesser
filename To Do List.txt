@@ -1,5 +1,5 @@
 Guess Game To Dos
-1. Volume sliders colides with other elements when screen is compressed
+done 1. Volume sliders colides with other elements when screen is compressed
 2. Change the reults message from 'Test' and display how many, Skips and misses were had
 3. Hide guess UI and move results UI after song guess
 4. Remove 'out of tries' message on guess bar after max guesses

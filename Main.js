@@ -46,6 +46,7 @@ const attemptEl = document.getElementById('attempt');
 const setVolume = document.getElementById('volumeAdj')
 const nextBtn = document.getElementById('next')
 const results = document.querySelector('.results')
+const main = document.querySelector('.main');
 
 function normalize(s) {
     return (s || '')
@@ -124,6 +125,7 @@ function updateUI() {
 }
 
 function nextTrack() {
+    main.style.display = 'block';
     results.style.display = 'none';
     player && player.pauseVideo();
     attemptIdx = 0;
@@ -137,7 +139,7 @@ function handleSkip() {
         attemptIdx++;
         updateUI();
     } else {
-        statusEl.innerHTML = `<span class="wrong">Out of tries.</span> It was: <b>${tracks[currentIndex].title}</b>.`;
+        statusEl.innerHTML = `<span class="wrong">Out of tries.</span> It was: <b>${tracks[currentIndex].title}</b>.`; //Probably can go now 
         loadResults();
         //nextTrack();
     }
@@ -146,6 +148,10 @@ function handleSkip() {
 function loadResults() {
     const data = player.getVideoData();
     const t = tracks[currentIndex]; //Change to a function to be called other places
+    const resultsValue = document.getElementById('resultsValue');
+    main.style.display = 'none';
+    if (attemptIdx + 1 == 6) resultsValue.textContent = `Failed! The song was ${t.title} from ${t.creator}`;
+    else resultsValue.textContent = `Guessed in ${attemptIdx + 1} try/tries. The song was ${t.title} from ${t.creator}`;
     results.style.display = 'block';
     if (!data) player.loadVideoById({ videoId: t.id, startSeconds: t.start });
     else player.seekTo(t.start, true);
@@ -165,7 +171,7 @@ nextBtn.addEventListener('click', () => {
 });
 
 submitBtn.addEventListener('click', () => {
-    const g = normalize(guessInput.value);
+    const g = guessInput.value.toLowerCase();
     if (!g) return guessInput.focus();
     const title = tracks[currentIndex].title.toLowerCase();
     if (title.includes(g)) {
