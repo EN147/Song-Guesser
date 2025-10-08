@@ -3,26 +3,18 @@ const tracks = [
     { creator: "Atelier Ayesha", title: "Hanashirube", id: "1CyRX3x6aDY", start: 0 },
     { creator: "Atelier Ayesha", title: "Tasugare", id: "zrApXHA2ECs", start: 1 },
     { creator: "Atelier Sophie", title: "Phronesis", id: "vnc6PTtsisw", start: 0 },
-    { creator: "Atelier Sophie", title: "Test1", id: "vnc6PTtsisw", start: 0 },
-    { creator: "Atelier Sophie", title: "Test2", id: "vnc6PTtsisw", start: 0 },
-    { creator: "Atelier Sophie", title: "Test3", id: "vnc6PTtsisw", start: 0 },
-    { creator: "Atelier Sophie", title: "Test4", id: "vnc6PTtsisw", start: 0 },
-    { creator: "Atelier Sophie", title: "Test5", id: "vnc6PTtsisw", start: 0 },
-    { creator: "Atelier Sophie", title: "Test6", id: "vnc6PTtsisw", start: 0 },
-    { creator: "Atelier Sophie", title: "Test7", id: "vnc6PTtsisw", start: 0 },
-    { creator: "Atelier Sophie", title: "Test8", id: "vnc6PTtsisw", start: 0 },
-    { creator: "Atelier Sophie", title: "Test9", id: "vnc6PTtsisw", start: 0 },
-    { creator: "Atelier Sophie", title: "Test10", id: "vnc6PTtsisw", start: 0 }
 ];
 
 // ======= 2) Game config =======
 const previewSteps = [1, 2, 4, 7, 11, 16]; // seconds
 const barsEl = document.getElementById('bars');
 let volumeCache = 50;
+let cloneBarsEl = null;
 
 for (let i = 0; i < previewSteps.length; i++) {
     const b = document.createElement('div');
-    b.className = 'box'; barsEl.appendChild(b);
+    b.className = 'box';
+    barsEl.appendChild(b);
 }
 
 // ======= 3) State =======
@@ -125,12 +117,13 @@ function updateUI() {
 }
 
 function nextTrack() {
-    main.style.display = 'block';
     results.style.display = 'none';
+    main.style.display = 'flex';
     player && player.pauseVideo();
     attemptIdx = 0;
     currentIndex = (currentIndex + 1) % tracks.length;
     statusEl.textContent = '';
+    cloneBarsEl.remove();
     updateUI();
 }
 
@@ -139,24 +132,45 @@ function handleSkip() {
         attemptIdx++;
         updateUI();
     } else {
-        statusEl.innerHTML = `<span class="wrong">Out of tries.</span> It was: <b>${tracks[currentIndex].title}</b>.`; //Probably can go now 
         loadResults();
-        //nextTrack();
     }
 }
 
-function loadResults() {
-    const data = player.getVideoData();
-    const t = tracks[currentIndex]; //Change to a function to be called other places
-    const resultsValue = document.getElementById('resultsValue');
-    main.style.display = 'none';
-    if (attemptIdx + 1 == 6) resultsValue.textContent = `Failed! The song was ${t.title} from ${t.creator}`;
-    else resultsValue.textContent = `Guessed in ${attemptIdx + 1} try/tries. The song was ${t.title} from ${t.creator}`;
-    results.style.display = 'block';
-    if (!data) player.loadVideoById({ videoId: t.id, startSeconds: t.start });
-    else player.seekTo(t.start, true);
-    player.playVideo();
+function whenPlayerReady(fn) {
+    if (ready && player?.getPlayerState) return fn();
+    const t = setInterval(() => {
+        if (ready && player?.getPlayerState) { clearInterval(t); fn(); }
+    }, 50);
 }
+
+function loadResults() {
+    guessInput.value = '';
+    const t = tracks[currentIndex];
+
+    // hide game
+    main.style.display = 'none';
+
+    whenPlayerReady(() => {
+        const data = player.getVideoData?.() || {};
+        const currentId = data.video_id || "";
+
+        player.cueVideoById({ videoId: t.id, startSeconds: t.start });
+    });
+
+    // update text + show results
+    const resultsValue = document.getElementById('resultsValue');
+    if (attemptIdx + 1 === 6) {
+        resultsValue.textContent = `Failed! The song was ${t.title} from ${t.creator}`;
+    } else {
+        resultsValue.textContent = `Guessed in ${attemptIdx + 1} try/tries. The song was ${t.title} from ${t.creator}`;
+    }
+
+    cloneBarsEl = barsEl.cloneNode(true);
+    cloneBarsEl.id = 'resultsBar';
+    results.parentNode.appendChild(cloneBarsEl);
+    results.style.display = 'block';
+}
+
 
 // ======= 5) Wire up buttons =======
 playBtn.addEventListener('click', () => {
@@ -171,14 +185,13 @@ nextBtn.addEventListener('click', () => {
 });
 
 submitBtn.addEventListener('click', () => {
-    const g = guessInput.value.toLowerCase();
-    if (!g) return guessInput.focus();
-    const title = tracks[currentIndex].title.toLowerCase();
-    if (title.includes(g)) {
-        statusEl.innerHTML = `<span class="correct">Correct!</span> ${tracks[currentIndex].title}`;
+    const gNorm = normalize(guessInput.value);
+    if (!gNorm) return guessInput.focus();
+    const fullTitle = creatorsNorm[currentIndex] + ' ' + titlesNorm[currentIndex];
+
+    if (fullTitle.includes(gNorm)) {
+        //statusEl.innerHTML = `<span class="correct">Correct!</span> ${tracks[currentIndex].title}`;
         loadResults();
-        //nextTrack();
-        guessInput.value = '';
     } else {
         statusEl.innerHTML = `<span class="wrong">Nope.</span>`;
         handleSkip();
@@ -189,12 +202,12 @@ guessInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') submitBtn.click();
 });
 
-
 guessInput.addEventListener('blur', () => setTimeout(hideList, 100));
 
 guessInput.addEventListener('input', () => {
     const q = normalize(guessInput.value);
     if (q.length < 2) return renderList([]);
+
     const matches = [];
     for (let i = 0; i < titlesNorm.length; i++) {
         const fullTitleNorm = creatorsNorm[i] + " " + titlesNorm[i];

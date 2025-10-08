@@ -10,3 +10,4 @@ done 1. Volume sliders colides with other elements when screen is compressed
 9. Add hints if the guesses are getting closer, If its same Franchise or not, maybe game or album too
 10. Make new game mode that has points like geo guesser
 13. Store songs in a database rather than in a json. Convert database data to json after the gamemode has been selected
+14. Make the play button turn into a pause button while it's playing
