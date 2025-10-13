@@ -18,6 +18,7 @@ for (let i = 0; i < previewSteps.length; i++) {
 }
 
 // ======= 3) State =======
+const outcomes = Array(previewSteps.length).fill(null); // Matches the size of the amount of guesses the player will have and fills each spot with null. These nulls will be replaced with outcome kinds
 let player, ready = false;     // keep these
 let currentIndex = Math.floor(Math.random() * tracks.length);
 let attemptIdx = 0; // 0..5
@@ -54,7 +55,7 @@ const creators = tracks.map(t => t.creator);
 const creatorsNorm = creators.map(t => normalize(t));
 
 
-// ======= 4) YouTube IFrame API plumbing =======
+// ======= 4) YouTube IFrame API =======
 window.onYouTubeIframeAPIReady = function () {
     player = new YT.Player('yt', {
         height: '390',
@@ -108,32 +109,50 @@ function pauseSegment() {
     player && player.pauseVideo();
 }
 
+function markOutcome(kind) {
+    outcomes[attemptIdx] = kind;
+}
+
 function updateUI() {
     lenEl.textContent = previewSteps[attemptIdx];
     attemptEl.textContent = attemptIdx + 1;
     [...barsEl.children].forEach((b, i) => {
-        b.classList.toggle('filled', i <= attemptIdx);
+        b.classList.remove('skip', 'miss', 'correct');
+        if (outcomes[i]) b.classList.add(outcomes[i]);
     });
 }
 
 function nextTrack() {
     results.style.display = 'none';
     main.style.display = 'flex';
+
     player && player.pauseVideo();
+
+    if (cloneBarsEl) { cloneBarsEl.remove(); cloneBarsEl = null; }
+
+    outcomes.fill(null);
+    [...barsEl.children].forEach(b => {
+        b.classList.remove('skip', 'miss', 'correct', 'filled');
+    });
     attemptIdx = 0;
+
     currentIndex = (currentIndex + 1) % tracks.length;
+
     statusEl.textContent = '';
-    cloneBarsEl.remove();
+    hideList();
+
     updateUI();
 }
 
-function handleSkip() {
+function handleSkip(kind) {
+    markOutcome(kind);
     if (attemptIdx < previewSteps.length - 1) {
         attemptIdx++;
         updateUI();
-    } else {
-        loadResults();
+        return;
     }
+
+    loadResults();
 }
 
 function whenPlayerReady(fn) {
@@ -144,6 +163,7 @@ function whenPlayerReady(fn) {
 }
 
 function loadResults() {
+    updateUI();
     guessInput.value = '';
     const t = tracks[currentIndex];
 
@@ -171,14 +191,15 @@ function loadResults() {
     results.style.display = 'block';
 }
 
-
 // ======= 5) Wire up buttons =======
 playBtn.addEventListener('click', () => {
     updateUI();
     playSegment(previewSteps[attemptIdx]);
 });
 
-skipBtn.addEventListener('click', handleSkip);
+skipBtn.addEventListener('click', () => {
+    handleSkip('skip');
+});
 
 nextBtn.addEventListener('click', () => {
     nextTrack();
@@ -191,10 +212,11 @@ submitBtn.addEventListener('click', () => {
 
     if (fullTitle.includes(gNorm)) {
         //statusEl.innerHTML = `<span class="correct">Correct!</span> ${tracks[currentIndex].title}`;
+        markOutcome('correct');
         loadResults();
     } else {
-        statusEl.innerHTML = `<span class="wrong">Nope.</span>`;
-        handleSkip();
+        //statusEl.innerHTML = `<span class="wrong">Nope.</span>`;
+        handleSkip('miss');
     }
 });
 
