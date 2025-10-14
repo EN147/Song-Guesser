@@ -4,8 +4,8 @@ done 2. Change the reults message from 'Test' and display how many, Skips and mi
 done 3. Hide guess UI and move results UI after song guess
 done 4. Remove 'out of tries' message on guess bar after max guesses
 5. Move Next button.
-6. Add Icon for HTML tab
-7. Add dark mode
+done but needs update 6. Add favicon for HTML tab
+done 7. Add dark mode
 8. Add guess tracker under Guess bar / Display the names of the player has already guessed
 9. Add hints if the guesses are getting closer, If its same Franchise or not, maybe game or album too
 10. Make new game mode that has points like geo guesser

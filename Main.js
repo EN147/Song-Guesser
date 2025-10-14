@@ -28,7 +28,7 @@ let acOpen = false;
 let acIndex = -1;     // highlighted item index, -1 = none
 let acItems = [];     // last rendered matches [{label, idx}]
 
-
+const root = document.documentElement;
 const playBtn = document.getElementById('play');
 const skipBtn = document.getElementById('skip');
 const guessInput = document.getElementById('guess');
@@ -36,10 +36,11 @@ const submitBtn = document.getElementById('submit');
 const statusEl = document.getElementById('status');
 const lenEl = document.getElementById('len');
 const attemptEl = document.getElementById('attempt');
-const setVolume = document.getElementById('volumeAdj')
-const nextBtn = document.getElementById('next')
-const results = document.querySelector('.results')
+const setVolume = document.getElementById('volumeAdj');
+const nextBtn = document.getElementById('next');
+const results = document.querySelector('.results');
 const main = document.querySelector('.main');
+const toggle = document.getElementById('darkToggle');
 
 function normalize(s) {
     return (s || '')
@@ -138,6 +139,10 @@ function nextTrack() {
 
     currentIndex = (currentIndex + 1) % tracks.length;
 
+    guessInput.value = '';
+    hideList();
+    guessInput.dispatchEvent(new Event('input'));
+
     statusEl.textContent = '';
     hideList();
 
@@ -164,7 +169,6 @@ function whenPlayerReady(fn) {
 
 function loadResults() {
     updateUI();
-    guessInput.value = '';
     const t = tracks[currentIndex];
 
     // hide game
@@ -354,6 +358,9 @@ function setActive(i) {
     });
 }
 
+toggle.addEventListener('change', () => {
+    document.documentElement.classList.toggle('darkToggle', toggle.checked);
+});
 
 setVolume.addEventListener('input', (e) => {
     const vol = parseInt(e.target.value, 10);
