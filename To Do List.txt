@@ -6,9 +6,15 @@ done 4. Remove 'out of tries' message on guess bar after max guesses
 5. Move Next button.
 done but needs update 6. Add favicon for HTML tab
 done 7. Add dark mode
-8. Add guess tracker under Guess bar / Display the names of the player has already guessed
+done 8. Add guess tracker under Guess bar / Display the names of the player has already guessed
 9. Add hints if the guesses are getting closer, If its same Franchise or not, maybe game or album too
 10. Make new game mode that has points like geo guesser
 13. Store songs in a database rather than in a json. Convert database data to json after the gamemode has been selected
 14. Make the play button turn into a pause button while it's playing
 done 15. Seperate CSS from HTML
+16. Save player data like score and best runs and things like Dark mode and volume
+17. Host game on a website
+18. Make a main page the player can choose game modes from or upload songs to a database
+19. Make web page for players to upload their own songs
+20. Make filters for game modes to allow players to select only the albums/games they want
+21. Add X, O, and skip symbols to guess history tracker.

@@ -6,16 +6,26 @@ const tracks = [
 ];
 
 // ======= 2) Game config =======
-const previewSteps = [1, 2, 4, 7, 11, 16]; // seconds
+const previewSteps = [1, 2, 4, 7, 11, 16]; // seconds (Change this to change the amount of guesses at what time the player will use)
 const barsEl = document.getElementById('bars');
+const historyEl = document.querySelector('.history');
 let volumeCache = 50;
 let cloneBarsEl = null;
+let guessHistory = [];
 
 for (let i = 0; i < previewSteps.length; i++) {
     const b = document.createElement('div');
     b.className = 'box';
     barsEl.appendChild(b);
+
+    const h = document.createElement('div');
+    h.className = 'card card--fixed';
+    const t = document.createElement('p');
+    t.classList = 'text';
+    h.appendChild(t);
+    historyEl.appendChild(h);
 }
+
 
 // ======= 3) State =======
 const outcomes = Array(previewSteps.length).fill(null); // Matches the size of the amount of guesses the player will have and fills each spot with null. These nulls will be replaced with outcome kinds
@@ -104,12 +114,6 @@ function playSegment(seconds) {
     }, 200);
 }
 
-function pauseSegment() {
-    pendingStopMs = null;
-    clearTimeout(segTimer);
-    player && player.pauseVideo();
-}
-
 function markOutcome(kind) {
     outcomes[attemptIdx] = kind;
 }
@@ -124,6 +128,10 @@ function updateUI() {
 }
 
 function nextTrack() {
+    document.querySelectorAll('.history .text').forEach(p => {
+        p.textContent = '';
+    });
+
     results.style.display = 'none';
     main.style.display = 'flex';
 
@@ -149,7 +157,8 @@ function nextTrack() {
     updateUI();
 }
 
-function handleSkip(kind) {
+function handleSkip(kind, guessValue = '') { // remove kind and check what values is being used for guessValues
+    addToGuessHistory(guessValue);
     markOutcome(kind);
     if (attemptIdx < previewSteps.length - 1) {
         attemptIdx++;
@@ -195,7 +204,7 @@ function loadResults() {
     results.style.display = 'block';
 }
 
-// ======= 5) Wire up buttons =======
+// ======= 5) Buttons =======
 playBtn.addEventListener('click', () => {
     updateUI();
     playSegment(previewSteps[attemptIdx]);
@@ -215,14 +224,19 @@ submitBtn.addEventListener('click', () => {
     const fullTitle = creatorsNorm[currentIndex] + ' ' + titlesNorm[currentIndex];
 
     if (fullTitle.includes(gNorm)) {
-        //statusEl.innerHTML = `<span class="correct">Correct!</span> ${tracks[currentIndex].title}`;
         markOutcome('correct');
         loadResults();
     } else {
-        //statusEl.innerHTML = `<span class="wrong">Nope.</span>`;
-        handleSkip('miss');
+        handleSkip('miss', guessInput.value);
     }
 });
+
+function addToGuessHistory(guessStr) {
+    const card = historyEl.children[attemptIdx];
+    if (!card) return;
+    const p = card.querySelector('.text');
+    if (p) p.textContent = guessStr;
+}
 
 guessInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') submitBtn.click();

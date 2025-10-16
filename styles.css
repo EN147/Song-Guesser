@@ -15,6 +15,36 @@ h1 {
     padding: 16px;
     margin: 16px 0;
 }
+.main .history .card {
+    margin: 0;
+    padding: 16px;
+    border-radius: 0;
+    background-color: #fff;
+}
+
+.history {
+    border: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+}
+
+.card--fixed{
+    height: 16px;
+    box-sizing: border-box;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+}
+
+.card--fixed .text{
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #000000;
+}
 
 .row {
     display: flex;
@@ -201,7 +231,7 @@ button {
 }
 
 #darkToggle:checked + .slider:before {
-    transform: translateX(40px);
+    transform: translateX(41px);
 }
 
 body {
