@@ -99,19 +99,21 @@ function playSegment(seconds) {
     const t = tracks[currentIndex];
     pendingStopMs = seconds * 1000;
 
-    // Make sure we’re audible.
-    try { player.unMute(); } catch { }
-    try { player.setVolume(volumeCache); } catch { }
+    whenPlayerReady(() => {
+        // Make sure we’re audible.
+        try { player.unMute(); } catch { }
+        try { player.setVolume(volumeCache); } catch { }
 
-    // Load + play from the desired start.
-    player.loadVideoById({ videoId: t.id, startSeconds: t.start });
+        // Load + play from the desired start.
+        player.loadVideoById({ videoId: t.id, startSeconds: t.start });
 
-    // Some browsers need a nudge after load.
-    setTimeout(() => {
-        if (player.getPlayerState && player.getPlayerState() !== YT.PlayerState.PLAYING) {
-            player.playVideo();
-        }
-    }, 200);
+        // Some browsers need a nudge after load.
+        setTimeout(() => {
+            if (player.getPlayerState && player.getPlayerState() !== YT.PlayerState.PLAYING) {
+                player.playVideo();
+            }
+        }, 200);
+    });
 }
 
 function markOutcome(kind) {
@@ -135,7 +137,7 @@ function nextTrack() {
     results.style.display = 'none';
     main.style.display = 'flex';
 
-    player && player.pauseVideo();
+    whenPlayerReady(() => player.pauseVideo?.());
 
     if (cloneBarsEl) { cloneBarsEl.remove(); cloneBarsEl = null; }
 
@@ -143,17 +145,14 @@ function nextTrack() {
     [...barsEl.children].forEach(b => {
         b.classList.remove('skip', 'miss', 'correct', 'filled');
     });
+
     attemptIdx = 0;
-
     currentIndex = (currentIndex + 1) % tracks.length;
-
     guessInput.value = '';
-    hideList();
     guessInput.dispatchEvent(new Event('input'));
-
     statusEl.textContent = '';
-    hideList();
 
+    hideList();
     updateUI();
 }
 
@@ -170,9 +169,12 @@ function handleSkip(kind, guessValue = '') { // remove kind and check what value
 }
 
 function whenPlayerReady(fn) {
-    if (ready && player?.getPlayerState) return fn();
+    if (player && typeof player.getPlayerState === 'function') return fn();
     const t = setInterval(() => {
-        if (ready && player?.getPlayerState) { clearInterval(t); fn(); }
+        if (player && typeof player.getPlayerState === 'function') {
+            clearInterval(t);
+            fn();
+        }
     }, 50);
 }
 
@@ -379,8 +381,11 @@ toggle.addEventListener('change', () => {
 setVolume.addEventListener('input', (e) => {
     const vol = parseInt(e.target.value, 10);
     volumeCache = vol;
-    if (player && player.unMute) player.unMute();
-    if (player && player.setVolume) player.setVolume(vol);
+
+    whenPlayerReady(() => {
+        player.unMute?.();
+        player.setVolume?.(vol);
+    });
 });
 
 

@@ -136,7 +136,22 @@ button {
 }
 
 .results {
-    display: none
+    display: none;
+}
+
+.results-row {
+    display: flex;
+    gap: 14px;
+    align-items: flex-end;
+}
+
+#resultsBar {
+    margin-top: 44px;
+}
+
+#yt {
+    width: 640px;
+    height: 390px;
 }
 
 .content {
@@ -151,7 +166,6 @@ button {
 
 #volumeAdj {
     writing-mode: vertical-lr;
-    -webkit-appearance: slider-vertical;
     width: 8px;
     height: clamp(120px, 24vh, 200px);
     transform: rotate(180deg);
