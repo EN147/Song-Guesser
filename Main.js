@@ -68,10 +68,16 @@ const creatorsNorm = creators.map(t => normalize(t));
 
 // ======= 4) YouTube IFrame API =======
 window.onYouTubeIframeAPIReady = function () {
+    // Build playerVars and add origin only on http/https (not file://)
+    const playerVars = { controls: 1, disablekb: 1, rel: 0, playsinline: 1 };
+    if (location.protocol === 'http:' || location.protocol === 'https:') {
+        playerVars.origin = location.origin; // works on localhost + prod
+    }
+
     player = new YT.Player('yt', {
         height: '390',
         width: '640',
-        playerVars: { controls: 1, disablekb: 1, rel: 0, playsinline: 1 },
+        playerVars,
         events: {
             onReady: () => {
                 ready = true;

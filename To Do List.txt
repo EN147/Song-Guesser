@@ -18,4 +18,5 @@ done 15. Seperate CSS from HTML
 19. Make web page for players to upload their own songs
 20. Make filters for game modes to allow players to select only the albums/games they want
 21. Add X, O, and skip symbols to guess history tracker.
-22. Add a bar that tracks how long the song has been playing for
+22. Add a bar that tracks how long the song has been playing for.
+23. Fix dark mode button on mobile to be in the to right corner.
