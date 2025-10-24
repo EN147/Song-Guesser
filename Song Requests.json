@@ -1,0 +1,5 @@
+const tracks = [
+    { creator: "Final Fantasy VII", title: "Those Who Fight/Battle Theme", id: "7HV3oyxr0Eg", start: 0 },
+    { creator: "Super Mario Sunshine", title: "Bianco Hills", id: "AEY8tfNtu7U", start: 0 },
+    { creator: "Monster Hunter Wilds", title: "Rey Dau Battle Theme", id: "6C275eURwIQ", start: 0 },
+];
