@@ -1,9 +1,40 @@
-// ======= 1) Your tracks (replace with your own) ======= This will be changed to a db at some point
-const tracks = [
-    { creator: "Atelier Ayesha", title: "Hanashirube", id: "1CyRX3x6aDY", start: 0 },
-    { creator: "Atelier Ayesha", title: "Tasugare", id: "zrApXHA2ECs", start: 1 },
-    { creator: "Atelier Sophie", title: "Phronesis", id: "vnc6PTtsisw", start: 0 },
-];
+// ======= 1) Tracks ======= This will be changed to a db at some point
+let tracks = [];
+let currentIndex;
+let titles = []; creators = []; titlesNorm = []; creatorsNorm = [];
+const playBtn = document.getElementById('play');
+
+fetch('tracks.json')
+    .then(response => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return response.json();
+    })
+    .then(data => {
+        tracks = data;
+        initTracks(); // Initialize YouTube player after tracks are loaded
+    })
+    .catch(error => {
+        console.error('Error loading tracks.json:', error);
+    });
+
+function initTracks() {
+    currentIndex = Math.floor(Math.random() * tracks.length);
+    titles = tracks.map(t => t.title);
+    titlesNorm = titles.map(t => normalize(t));
+    creators = tracks.map(t => t.creator);
+    creatorsNorm = creators.map(t => normalize(t));
+    playBtn.disabled = false; //Make sure the play button is disabled until YT is ready
+}
+
+function normalize(s) {
+    return (s || '')
+        .toLowerCase()
+        .trim()
+        .replace(/\s+/g, ' ')
+        .replace(/[^\w\s]/g, ''); // optional: strip punctuation
+}
+
+
 
 // ======= 2) Game config =======
 const previewSteps = [1, 2, 4, 7, 11, 16]; // seconds (Change this to change the amount of guesses at what time the player will use)
@@ -26,20 +57,17 @@ for (let i = 0; i < previewSteps.length; i++) {
     historyEl.appendChild(h);
 }
 
-
 // ======= 3) State =======
 const outcomes = Array(previewSteps.length).fill(null); // Matches the size of the amount of guesses the player will have and fills each spot with null. These nulls will be replaced with outcome kinds
-let player, ready = false;     // keep these
-let currentIndex = Math.floor(Math.random() * tracks.length);
-let attemptIdx = 0; // 0..5
-let segTimer = null;           // keep this
-let pendingStopMs = null;      // moved up here so it's declared once
+let player, ready = false
+let attemptIdx = 0;
+let segTimer = null;
+let pendingStopMs = null;
 let acOpen = false;
-let acIndex = -1;     // highlighted item index, -1 = none
-let acItems = [];     // last rendered matches [{label, idx}]
+let acIndex = -1; // highlighted item index, -1 = none
+let acItems = []; // last rendered matches [{label, idx}]
 
 const root = document.documentElement;
-const playBtn = document.getElementById('play');
 const skipBtn = document.getElementById('skip');
 const guessInput = document.getElementById('guess');
 const submitBtn = document.getElementById('submit');
@@ -52,26 +80,11 @@ const results = document.querySelector('.results');
 const main = document.querySelector('.main');
 const toggle = document.getElementById('darkToggle');
 
-function normalize(s) {
-    return (s || '')
-        .toLowerCase()
-        .trim()
-        .replace(/\s+/g, ' ')
-        .replace(/[^\w\s]/g, ''); // optional: strip punctuation
-}
-
-const titles = tracks.map(t => t.title);
-const titlesNorm = titles.map(t => normalize(t));
-const creators = tracks.map(t => t.creator);
-const creatorsNorm = creators.map(t => normalize(t));
-
-
 // ======= 4) YouTube IFrame API =======
-window.onYouTubeIframeAPIReady = function () {
-    // Build playerVars and add origin only on http/https (not file://)
+function initYouTube() {
     const playerVars = { controls: 1, disablekb: 1, rel: 0, playsinline: 1 };
     if (location.protocol === 'http:' || location.protocol === 'https:') {
-        playerVars.origin = location.origin; // works on localhost + prod
+        playerVars.origin = location.origin;
     }
 
     player = new YT.Player('yt', {
@@ -81,8 +94,8 @@ window.onYouTubeIframeAPIReady = function () {
         events: {
             onReady: () => {
                 ready = true;
-                player.setVolume(volumeCache);
-                console.log('[YT] ready');
+                playBtn.disabled = false;
+                console.log('[YT] onReady fired');
             },
             onStateChange: (e) => {
                 // 1 = PLAYING, 2 = PAUSED, 3 = BUFFERING, 5 = CUED
@@ -97,10 +110,33 @@ window.onYouTubeIframeAPIReady = function () {
             }
         }
     });
+}
+
+window.onYouTubeIframeAPIReady = function () {
+    console.log('[YT] API ready callback');
+    initYouTube();
 };
 
+// If the API script loaded before our file finished parsing
+if (window.YT && YT.loaded && typeof initYouTube === 'function') {
+    initYouTube();
+}
+
+function whenPlayerReady(fn) {
+    if (player && typeof player.getPlayerState === 'function') return fn();
+    const t = setInterval(() => {
+        if (player && typeof player.getPlayerState === 'function') {
+            clearInterval(t);
+            fn();
+        }
+    }, 50);
+}
+
 function playSegment(seconds) {
+    //console.log('[YT] Play button Test');
     if (!ready) { console.warn('[YT] not ready yet'); return; }
+    if (!player) { console.warn('[YT] player not initialized'); return; }
+    if (!player.loadVideoById) { console.warn('[YT] API not attached to HTML'); return; }
 
     const t = tracks[currentIndex];
     pendingStopMs = seconds * 1000;
@@ -116,7 +152,7 @@ function playSegment(seconds) {
         // Some browsers need a nudge after load.
         setTimeout(() => {
             if (player.getPlayerState && player.getPlayerState() !== YT.PlayerState.PLAYING) {
-                player.playVideo();
+                player.playVideo(); // Doesn't work if the loaded video has an ad
             }
         }, 200);
     });
@@ -172,16 +208,6 @@ function handleSkip(kind, guessValue = '') { // remove kind and check what value
     }
 
     loadResults();
-}
-
-function whenPlayerReady(fn) {
-    if (player && typeof player.getPlayerState === 'function') return fn();
-    const t = setInterval(() => {
-        if (player && typeof player.getPlayerState === 'function') {
-            clearInterval(t);
-            fn();
-        }
-    }, 50);
 }
 
 function loadResults() {
@@ -268,7 +294,7 @@ guessInput.addEventListener('input', () => {
     }
     console.log('matches', matches.length);
 
-    renderList(matches);  // see D
+    renderList(matches);
 });
 
 guessInput.addEventListener('keydown', (e) => {

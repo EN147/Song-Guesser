@@ -1,4 +1,4 @@
-Guess Game To Dos
+Song Guess Game To Dos
 done 1. Volume sliders colides with other elements when screen is compressed
 done 2. Change the reults message from 'Test' and display how many, Skips and misses were had
 done 3. Hide guess UI and move results UI after song guess
@@ -9,7 +9,7 @@ done 7. Add dark mode
 done 8. Add guess tracker under Guess bar / Display the names of the player has already guessed
 9. Add hints if the guesses are getting closer, If its same Franchise or not, maybe game or album too
 10. Make new game mode that has points like geo guesser
-13. Store songs in a database rather than in a json. Convert database data to json after the gamemode has been selected
+13. Store songs in a database rather than in a .json. Convert database data to json after the gamemode has been selected
 14. If the player presses skip while the music is playing, the song should not stop and the new end of the song should update
 done 15. Seperate CSS from HTML
 16. Save player data like score and best runs and things like Dark mode and volume
@@ -20,3 +20,4 @@ done 15. Seperate CSS from HTML
 21. Add X, O, and skip symbols to guess history tracker.
 22. Add a bar that tracks how long the song has been playing for.
 23. Fix dark mode button on mobile to be in the to right corner.
+done 24. Make seperate .json file for songs outside of the Main.js
