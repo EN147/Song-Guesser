@@ -3,3 +3,11 @@ Server Testing.txt
 
 #Local track testing
 alt tracks.txt
+
+#General
+.vs/
+*.vsidx
+*.sqlite
+*.db
+*.db-shm
+*.db-wal
