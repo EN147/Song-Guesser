@@ -11,3 +11,8 @@ In "Song-Guesser/tracks.json" change the values of the songs to whatever you lik
 \# 2) Open
 http://localhost:(Your Port)/BaseGame.html
 
+
+
+\# 3) API
+DB interaction APIs are currently being worked on and are not implemented.
+
