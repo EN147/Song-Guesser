@@ -4,10 +4,19 @@ Server Testing.txt
 #Local track testing
 alt tracks.txt
 
-#General
+#.net
 .vs/
 *.vsidx
+bin/
+obj/
+*.user
+*.suo
+
+#SQLite
 *.sqlite
 *.db
 *.db-shm
 *.db-wal
+
+# OS
+.DS_Store

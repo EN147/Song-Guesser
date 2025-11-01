@@ -9,7 +9,7 @@ done 7. Add dark mode
 done 8. Add guess tracker under Guess bar / Display the names of the player has already guessed
 9. Add hints if the guesses are getting closer, If its same Franchise or not, maybe game or album too
 10. Make new game mode that has points like geo guesser
-13. Store songs in a database rather than in a .json. Convert database data to json after the gamemode has been selected
+In Work 13. Store songs in a database rather than in a .json. Convert database data to json after the gamemode has been selected
 14. If the player presses skip while the music is playing, the song should not stop and the new end of the song should update
 done 15. Seperate CSS from HTML
 16. Save player data like score and best runs and things like Dark mode and volume
@@ -21,3 +21,4 @@ done 15. Seperate CSS from HTML
 22. Add a bar that tracks how long the song has been playing for.
 23. Fix dark mode button on mobile to be in the to right corner.
 done 24. Make seperate .json file for songs outside of the Main.js
+In Work 24. Create REST APIs in ASP.NET using C# for GET, POST, and DELETE. PATCH and PUT probably won't be needed

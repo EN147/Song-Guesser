@@ -3,20 +3,32 @@
   "WorkspaceRootPath": "D:\\GitProjects\\Song-Guesser\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\GitProjects\\Song-Guesser\\Main.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Main.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\GitProjects\\Song-Guesser\\SongGuesser.Api\\Program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:SongGuesser.Api\\Program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\GitProjects\\Song-Guesser\\BaseGame.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:BaseGame.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\GitProjects\\Song-Guesser\\SongGuesser.Api\\Data\\AppDbContext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:SongGuesser.Api\\Data\\AppDbContext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\GitProjects\\Song-Guesser\\tracks.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:tracks.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\GitProjects\\Song-Guesser\\SongGuesser.Api\\Models\\Song.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:SongGuesser.Api\\Models\\Song.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\GitProjects\\Song-Guesser\\styles.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:styles.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\GitProjects\\Song-Guesser\\web\\Main.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:web\\Main.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\GitProjects\\Song-Guesser\\web\\BaseGame.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:web\\BaseGame.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\GitProjects\\Song-Guesser\\web\\tracks.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:web\\tracks.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\GitProjects\\Song-Guesser\\web\\styles.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:web\\styles.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,56 +38,98 @@
       "DocumentGroups": [
         {
           "DockedHeight": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "AppDbContext.cs",
+              "DocumentMoniker": "D:\\GitProjects\\Song-Guesser\\SongGuesser.Api\\Data\\AppDbContext.cs",
+              "RelativeDocumentMoniker": "SongGuesser.Api\\Data\\AppDbContext.cs",
+              "ToolTip": "D:\\GitProjects\\Song-Guesser\\SongGuesser.Api\\Data\\AppDbContext.cs",
+              "RelativeToolTip": "SongGuesser.Api\\Data\\AppDbContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-01T01:33:51.757Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "tracks.json",
-              "DocumentMoniker": "D:\\GitProjects\\Song-Guesser\\tracks.json",
-              "RelativeDocumentMoniker": "tracks.json",
-              "ToolTip": "D:\\GitProjects\\Song-Guesser\\tracks.json",
-              "RelativeToolTip": "tracks.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-10-24T05:28:03.2Z"
+              "Title": "Song.cs",
+              "DocumentMoniker": "D:\\GitProjects\\Song-Guesser\\SongGuesser.Api\\Models\\Song.cs",
+              "RelativeDocumentMoniker": "SongGuesser.Api\\Models\\Song.cs",
+              "ToolTip": "D:\\GitProjects\\Song-Guesser\\SongGuesser.Api\\Models\\Song.cs",
+              "RelativeToolTip": "SongGuesser.Api\\Models\\Song.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-01T01:33:50.017Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "Main.js",
-              "DocumentMoniker": "D:\\GitProjects\\Song-Guesser\\Main.js",
-              "RelativeDocumentMoniker": "Main.js",
-              "ToolTip": "D:\\GitProjects\\Song-Guesser\\Main.js",
-              "RelativeToolTip": "Main.js",
-              "ViewState": "AgIAAHwBAAAAAAAAAAAqwIkBAAAXAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2025-10-13T09:01:55.301Z",
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\GitProjects\\Song-Guesser\\SongGuesser.Api\\Program.cs",
+              "RelativeDocumentMoniker": "SongGuesser.Api\\Program.cs",
+              "ToolTip": "D:\\GitProjects\\Song-Guesser\\SongGuesser.Api\\Program.cs",
+              "RelativeToolTip": "SongGuesser.Api\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB8AAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-01T01:33:45.76Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "tracks.json",
+              "DocumentMoniker": "D:\\GitProjects\\Song-Guesser\\web\\tracks.json",
+              "RelativeDocumentMoniker": "web\\tracks.json",
+              "ToolTip": "D:\\GitProjects\\Song-Guesser\\web\\tracks.json",
+              "RelativeToolTip": "web\\tracks.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-11-01T01:32:08.225Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "styles.css",
+              "DocumentMoniker": "D:\\GitProjects\\Song-Guesser\\web\\styles.css",
+              "RelativeDocumentMoniker": "web\\styles.css",
+              "ToolTip": "D:\\GitProjects\\Song-Guesser\\web\\styles.css",
+              "RelativeToolTip": "web\\styles.css",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2025-11-01T01:32:01.584Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "BaseGame.html",
+              "DocumentMoniker": "D:\\GitProjects\\Song-Guesser\\web\\BaseGame.html",
+              "RelativeDocumentMoniker": "web\\BaseGame.html",
+              "ToolTip": "D:\\GitProjects\\Song-Guesser\\web\\BaseGame.html",
+              "RelativeToolTip": "web\\BaseGame.html",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2025-11-01T01:32:00.695Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "styles.css",
-              "DocumentMoniker": "D:\\GitProjects\\Song-Guesser\\styles.css",
-              "RelativeDocumentMoniker": "styles.css",
-              "ToolTip": "D:\\GitProjects\\Song-Guesser\\styles.css",
-              "RelativeToolTip": "styles.css",
-              "ViewState": "AgIAAJEAAAAAAAAAAAApwJ8AAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
-              "WhenOpened": "2025-10-13T09:01:50.774Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "BaseGame.html",
-              "DocumentMoniker": "D:\\GitProjects\\Song-Guesser\\BaseGame.html",
-              "RelativeDocumentMoniker": "BaseGame.html",
-              "ToolTip": "D:\\GitProjects\\Song-Guesser\\BaseGame.html",
-              "RelativeToolTip": "BaseGame.html",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAuAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
-              "WhenOpened": "2025-09-22T07:59:53.18Z"
+              "Title": "Main.js",
+              "DocumentMoniker": "D:\\GitProjects\\Song-Guesser\\web\\Main.js",
+              "RelativeDocumentMoniker": "web\\Main.js",
+              "ToolTip": "D:\\GitProjects\\Song-Guesser\\web\\Main.js",
+              "RelativeToolTip": "web\\Main.js",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2025-11-01T01:31:59.774Z",
+              "EditorCaption": ""
             }
           ]
         }

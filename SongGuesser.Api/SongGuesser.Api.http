@@ -1,0 +1,6 @@
+@SongGuesser.Api_HostAddress = http://localhost:5128
+
+GET {{SongGuesser.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

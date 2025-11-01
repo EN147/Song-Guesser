@@ -1,6 +1,11 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\SongGuesser.Api",
+    "\\SongGuesser.Api\\Data",
+    "\\SongGuesser.Api\\Models",
+    "\\web"
   ],
+  "SelectedNode": "\\SongGuesser.Api\\Program.cs",
   "PreviewInSolutionExplorer": false
 }

@@ -31,7 +31,7 @@ function normalize(s) {
         .toLowerCase()
         .trim()
         .replace(/\s+/g, ' ')
-        .replace(/[^\w\s]/g, ''); // optional: strip punctuation
+        .replace(/[^\w\s]/g, '');
 }
 
 
